@@ -1,5 +1,3 @@
-# .github/workflows/rosti_deploy.yml
-
 name: Deploy into Roští.cz
 
 on:
