@@ -15,44 +15,4 @@ export const PLASMIC = initPlasmicLoader({
   preview: false,
 });
 
-// Register the Login component
-PLASMIC.registerComponent(Login, {
-  name: 'Login',
-  props: {
-    email: {
-      type: 'string', // Email value passed from parent component
-    },
-    password: {
-      type: 'string', // Password value passed from parent component
-    }
-  },
-  refActions: {
-    triggerLogin: {
-      description: 'Trigger the login action with the provided email and password',
-      argTypes: [] // No arguments needed for this action
-    }
-  }
-});
 
-// Register the Logout component
-PLASMIC.registerComponent(Logout, {
-  name: 'Logout',
-  props: {},
-  refActions: {
-    triggerLogout: {
-      description: 'Trigger the logout action',
-      argTypes: [],
-    },
-  },
-});
-
-
-
-
-// Register your global context
-PLASMIC.registerGlobalContext(AuthGlobalContext, {
-  name: "AuthGlobalContext",
-  props: { authUrl: "string" },
-  providesData: true,
-  // No global actions are needed since we are only fetching data
-});
