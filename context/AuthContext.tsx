@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DataProvider } from "@plasmicapp/host";
-import { supabase } from '../lib/supabaseClient'; // Adjust the import path if necessary
+import { supabase } from '../lib/supabaseClient';
 
 interface Visitor {
   created_at: string;
@@ -51,11 +51,10 @@ export const AuthGlobalContext = ({ children, authUrl }: React.PropsWithChildren
   }, [authUrl]);
 
   return (
-  <DataProvider name="visitor" data={visitorData}>
-    <DataProvider name="isLogged" data={isLogged}>
-      {loading ? <p>Loading...</p> : children}
+    <DataProvider name="visitor" data={visitorData}>
+      <DataProvider name="isLogged" data={isLogged}>
+        {loading ? <p>Loading...</p> : children}
+      </DataProvider>
     </DataProvider>
-  </DataProvider>
-);
-
+  );
 };
