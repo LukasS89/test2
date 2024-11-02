@@ -1,7 +1,5 @@
 import { initPlasmicLoader } from "@plasmicapp/loader-nextjs";
-import Login from './components/Login';
-import Logout from './components/Logout';
-import { AuthGlobalContext } from './components/AuthGlobalContext';
+
 
 export const PLASMIC = initPlasmicLoader({
   projects: [
