@@ -51,12 +51,11 @@ export const AuthGlobalContext = ({ children, authUrl }: React.PropsWithChildren
   }, [authUrl]);
 
   return (
-    <DataProvider name="visitor" data={visitorData}>
-      <DataProvider name="isLogged" data={isLogged}>
-        <DataProvider name="loading" data={loading}>
-          {children}
-        </DataProvider>
-      </DataProvider>
+  <DataProvider name="visitor" data={visitorData}>
+    <DataProvider name="isLogged" data={isLogged}>
+      {loading ? <p>Loading...</p> : children}
     </DataProvider>
-  );
+  </DataProvider>
+);
+
 };
