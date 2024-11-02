@@ -17,6 +17,8 @@ const Login = forwardRef<LoginActions, LoginProps>(({ email, password }, ref) =>
       const { user, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         console.error("Login error:", error.message);
+      } else {
+        console.log("Logged in user:", user); // Optionally log the user for debugging
       }
     } catch (err) {
       console.error("Unexpected error:", err);
@@ -30,6 +32,7 @@ const Login = forwardRef<LoginActions, LoginProps>(({ email, password }, ref) =>
   return <div style={{ background: 'transparent', width: '1px', height: '1px' }}></div>;
 });
 
-Login.displayName = "Login"; // Add this line
+// Setting display name for better debugging and in the React DevTools
+Login.displayName = "Login";
 
 export default Login;
