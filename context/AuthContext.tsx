@@ -1,42 +1,62 @@
-// context/AuthContext.tsx
-import React, { createContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { DataProvider } from "@plasmicapp/host";
 import { supabase } from '../lib/supabaseClient'; // Adjust the import path if necessary
-import { Session, AuthChangeEvent } from '@supabase/supabase-js'; // Import necessary types
 
-interface AuthContextType {
-  user: any; // Replace with your user type if available
-  loading: boolean;
-  isLoggedIn: boolean; // Add this state
+interface Visitor {
+  created_at: string;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  userName: string;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+async function fetchVisitorData(userId: string): Promise<Visitor | null> {
+  const { data, error } = await supabase
+    .from('visitors')
+    .select('created_at, firstName, lastName, email, userName')
+    .eq('user_id', userId)
+    .single();
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<any>(null); // Replace 'any' with your user type
+  if (error) {
+    console.error('Error fetching visitor data:', error);
+    return null;
+  }
+  return data;
+}
+
+interface AuthGlobalContextProps {
+  authUrl?: string;
+}
+
+export const AuthGlobalContext = ({ children, authUrl }: React.PropsWithChildren<AuthGlobalContextProps>) => {
+  const [visitorData, setVisitorData] = useState<Visitor | null>(null);
+  const [isLogged, setIsLogged] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check the current session
-    const session = supabase.auth.getSession();
-    setUser(session.user);
-    setLoading(false);
-
-    // Subscribe to auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
-      setUser(session?.user || null);
-    });
-
-    // Cleanup subscription on unmount
-    return () => {
-      subscription.unsubscribe();
+    const fetchUserVisitorData = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setIsLogged(true);
+        const visitor = await fetchVisitorData(user.id);
+        setVisitorData(visitor);
+      } else {
+        setIsLogged(false);
+        setVisitorData(null);
+      }
+      setLoading(false);
     };
-  }, []);
 
-  const isLoggedIn = !!user; // Determine if the user is logged in
+    fetchUserVisitorData();
+  }, [authUrl]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, isLoggedIn }}>
-      {children}
-    </AuthContext.Provider>
+    <DataProvider name="visitor" data={visitorData}>
+      <DataProvider name="isLogged" data={isLogged}>
+        <DataProvider name="loading" data={loading}>
+          {children}
+        </DataProvider>
+      </DataProvider>
+    </DataProvider>
   );
 };
