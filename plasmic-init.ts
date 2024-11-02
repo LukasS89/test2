@@ -1,4 +1,7 @@
 import { initPlasmicLoader } from "@plasmicapp/loader-nextjs";
+import Login from './components/Login';
+import Logout from './components/Logout';
+import { AuthGlobalContext } from './components/AuthGlobalContext';
 
 export const PLASMIC = initPlasmicLoader({
   projects: [
@@ -8,18 +11,48 @@ export const PLASMIC = initPlasmicLoader({
     },
   ],
 
-  // By default Plasmic will use the last published version of your project.
-  // For development, you can set preview to true, which will use the unpublished
-  // project, allowing you to see your designs without publishing.  Please
-  // only use this for development, as this is significantly slower.
+  // Set preview to true for development to see unpublished changes.
   preview: false,
 });
 
-// You can register any code components that you want to use here; see
-// https://docs.plasmic.app/learn/code-components-ref/
-// And configure your Plasmic project to use the host url pointing at
-// the /plasmic-host page of your nextjs app (for example,
-// http://localhost:3000/plasmic-host).  See
-// https://docs.plasmic.app/learn/app-hosting/#set-a-plasmic-project-to-use-your-app-host
+// Register the Login component
+PLASMIC.registerComponent(Login, {
+  name: 'Login',
+  props: {
+    email: {
+      type: 'string', // Email value passed from parent component
+    },
+    password: {
+      type: 'string', // Password value passed from parent component
+    }
+  },
+  refActions: {
+    triggerLogin: {
+      description: 'Trigger the login action with the provided email and password',
+      argTypes: [] // No arguments needed for this action
+    }
+  }
+});
 
-// PLASMIC.registerComponent(...);
+// Register the Logout component
+PLASMIC.registerComponent(Logout, {
+  name: 'Logout',
+  props: {},
+  refActions: {
+    triggerLogout: {
+      description: 'Trigger the logout action',
+      argTypes: [],
+    },
+  },
+});
+
+
+
+
+// Register your global context
+PLASMIC.registerGlobalContext(AuthGlobalContext, {
+  name: "AuthGlobalContext",
+  props: { authUrl: "string" },
+  providesData: true,
+  // No global actions are needed since we are only fetching data
+});
