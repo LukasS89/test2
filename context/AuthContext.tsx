@@ -1,6 +1,7 @@
 // context/AuthContext.tsx
 import React, { createContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient'; // Adjust the import path if necessary
+import { Session, AuthChangeEvent } from '@supabase/supabase-js'; // Import necessary types
 
 interface AuthContextType {
   user: any; // Replace with your user type if available
@@ -21,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(false);
 
     // Subscribe to auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user || null);
     });
 
