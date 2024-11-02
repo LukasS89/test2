@@ -1,36 +1,30 @@
 // components/Logout.tsx
 import React, { forwardRef, useImperativeHandle } from 'react';
-import { supabase } from '../lib/supabaseClient'; // Adjust the path based on your directory structure
+import { supabase } from '../lib/supabaseClient';
 
-// Define the actions that can be triggered externally
 interface LogoutActions {
-  triggerLogout: () => Promise<void>; // Action to trigger logout
+  triggerLogout: () => Promise<void>;
 }
 
-// Use forwardRef to expose actions
-const Logout = forwardRef<LogoutActions, {}>((_, ref) => {
-  // Function to handle logout logic
+const Logout = forwardRef<LogoutActions, undefined>((_, ref) => {
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error logging out:', error.message);
-    } else {
-      console.log('Logged out successfully!');
-      // Optionally, handle any post-logout actions (like redirecting or notifying the user)
-      window.location.reload(); // Reload the page to update the UI
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Logout error:", error.message);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
     }
   };
 
-  // Use useImperativeHandle to expose functions
   useImperativeHandle(ref, () => ({
-    triggerLogout: handleLogout, // Expose triggerLogout action
+    triggerLogout: handleLogout,
   }));
 
-  return (
-    <div style={{ background: 'transparent', width: '1px', height: '1px' }}>
-      {/* This empty div has a 1px background and is invisible in UI */}
-    </div>
-  );
+  return <div style={{ background: 'transparent', width: '1px', height: '1px' }}></div>;
 });
+
+Logout.displayName = "Logout"; // Add this line
 
 export default Logout;
