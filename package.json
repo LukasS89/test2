@@ -11,16 +11,20 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@ant-design/pro-components": "^2.6.4",
-    "@plasmicapp/cli": "^0.1.334",
+    "@plasmicapp/cli": "^0.1.335",
     "@plasmicapp/loader-nextjs": "^1.0.406",
     "@plasmicapp/react-web": "^0.2.354",
     "@plasmicpkgs/antd5": "^0.0.254",
     "@plasmicpkgs/plasmic-basic-components": "^0.0.230",
+    "@plasmicpkgs/plasmic-cms": "^0.0.272",
     "@plasmicpkgs/plasmic-query": "^0.0.225",
-    "@plasmicpkgs/plasmic-rich-components": "^1.0.197",
+    "@plasmicpkgs/plasmic-rich-components": "^1.0.198",
+    "@plasmicpkgs/react-aria": "^0.0.101",
     "next": "14.2.16",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-quill": "^2.0.0",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",

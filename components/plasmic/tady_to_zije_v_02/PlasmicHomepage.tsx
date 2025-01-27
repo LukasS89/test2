@@ -59,8 +59,10 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { Timer } from "@plasmicpkgs/plasmic-basic-components";
 import Header from "../../Header"; // plasmic-import: uZX7p1wyVbCa/component
 import CategoryMenu from "../../CategoryMenu"; // plasmic-import: nREGSf5d9U6b/component
+import FeatureSlider from "../../FeatureSlider"; // plasmic-import: ztikhjgYujI4/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -71,10 +73,16 @@ import sty from "./PlasmicHomepage.module.css"; // plasmic-import: jg4y0aIywfx4/
 
 createPlasmicElementProxy;
 
-export type PlasmicHomepage__VariantMembers = {};
-export type PlasmicHomepage__VariantsArgs = {};
+export type PlasmicHomepage__VariantMembers = {
+  revealOff: "revealOff";
+};
+export type PlasmicHomepage__VariantsArgs = {
+  revealOff?: SingleBooleanChoiceArg<"revealOff">;
+};
 type VariantPropType = keyof PlasmicHomepage__VariantsArgs;
-export const PlasmicHomepage__VariantProps = new Array<VariantPropType>();
+export const PlasmicHomepage__VariantProps = new Array<VariantPropType>(
+  "revealOff"
+);
 
 export type PlasmicHomepage__ArgsType = {};
 type ArgPropType = keyof PlasmicHomepage__ArgsType;
@@ -82,10 +90,14 @@ export const PlasmicHomepage__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicHomepage__OverridesType = {
   root?: Flex__<"div">;
-  section?: Flex__<"section">;
+  timer?: Flex__<typeof Timer>;
   header?: Flex__<typeof Header>;
   main?: Flex__<"main">;
   categoryMenu?: Flex__<typeof CategoryMenu>;
+  featureSlider?: Flex__<typeof FeatureSlider>;
+  h2?: Flex__<"h2">;
+  h1?: Flex__<"h1">;
+  h3?: Flex__<"h3">;
 };
 
 export interface DefaultHomepageProps {}
@@ -131,22 +143,62 @@ function PlasmicHomepage__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "variable",
+        path: "reveal",
         type: "private",
-        variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       },
       {
         path: "categoryMenu.selectedItem",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => ({})
       },
       {
         path: "categoryMenu.selectedSubcategory",
         type: "private",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) => ({})
+      },
+      {
+        path: "categoryMenu.selectedEvent",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return JSON.parse(localStorage.getItem("queryCache")).events.find(
+                item => item.webUrl === $props.eventUrl
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return {};
+              }
+              throw e;
+            }
+          })()
+      },
+      {
+        path: "revealOff",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return !$state.reveal;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })() ?? $props.revealOff
       }
     ],
     [$props, $ctx, $refs]
@@ -182,14 +234,54 @@ function PlasmicHomepage__RenderFunc(props: {
             projectcss.plasmic_tokens,
             plasmic_antd_5_hostless_css.plasmic_tokens,
             plasmic_plasmic_rich_components_css.plasmic_tokens,
-            sty.root
+            sty.root,
+            {
+              [sty.rootrevealOff]: hasVariant($state, "revealOff", "revealOff")
+            }
           )}
         >
-          <section
-            data-plasmic-name={"section"}
-            data-plasmic-override={overrides.section}
-            className={classNames(projectcss.all, sty.section)}
-          >
+          <Timer
+            data-plasmic-name={"timer"}
+            data-plasmic-override={overrides.timer}
+            className={classNames("__wab_instance", sty.timer)}
+            intervalSeconds={0.05}
+            isRunning={!$state.reveal}
+            onTick={async () => {
+              const $steps = {};
+
+              $steps["updateReveal"] = true
+                ? (() => {
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["reveal"]
+                      },
+                      operation: 0,
+                      value: true
+                    };
+                    return (({ variable, value, startIndex, deleteCount }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
+
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["updateReveal"] != null &&
+                typeof $steps["updateReveal"] === "object" &&
+                typeof $steps["updateReveal"].then === "function"
+              ) {
+                $steps["updateReveal"] = await $steps["updateReveal"];
+              }
+            }}
+            runWhileEditing={false}
+          />
+
+          <section className={classNames(projectcss.all, sty.section__qZEyf)}>
             <Header
               data-plasmic-name={"header"}
               data-plasmic-override={overrides.header}
@@ -204,20 +296,157 @@ function PlasmicHomepage__RenderFunc(props: {
               <CategoryMenu
                 data-plasmic-name={"categoryMenu"}
                 data-plasmic-override={overrides.categoryMenu}
-                className={classNames("__wab_instance", sty.categoryMenu)}
-                onSelectedItemChange={generateStateOnChangeProp($state, [
+                className={classNames("__wab_instance", sty.categoryMenu, {
+                  [sty.categoryMenurevealOff]: hasVariant(
+                    $state,
+                    "revealOff",
+                    "revealOff"
+                  )
+                })}
+                onSelectedEventChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "categoryMenu",
+                    "selectedEvent"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+                onSelectedItemChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "categoryMenu",
+                    "selectedItem"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+                onSelectedSubcategoryChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "categoryMenu",
+                    "selectedSubcategory"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+                selectedEvent={generateStateValueProp($state, [
+                  "categoryMenu",
+                  "selectedEvent"
+                ])}
+                selectedItem={generateStateValueProp($state, [
                   "categoryMenu",
                   "selectedItem"
-                ])}
-                onSelectedSubcategoryChange={generateStateOnChangeProp($state, [
-                  "categoryMenu",
-                  "selectedSubcategory"
                 ])}
                 selectedSubcategory={generateStateValueProp($state, [
                   "categoryMenu",
                   "selectedSubcategory"
                 ])}
               />
+
+              <div
+                className={classNames(projectcss.all, sty.freeBox__eeJxM, {
+                  [sty.freeBoxrevealOff__eeJxMYqu7]: hasVariant(
+                    $state,
+                    "revealOff",
+                    "revealOff"
+                  )
+                })}
+              >
+                <section
+                  className={classNames(projectcss.all, sty.section__b98GO)}
+                >
+                  <FeatureSlider
+                    data-plasmic-name={"featureSlider"}
+                    data-plasmic-override={overrides.featureSlider}
+                    className={classNames("__wab_instance", sty.featureSlider)}
+                  />
+                </section>
+                <div
+                  className={classNames(projectcss.all, sty.freeBox__gmnwz)}
+                  style={(() => {
+                    try {
+                      return {
+                        gap: "5vw"
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                >
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__xlwIh)}
+                  >
+                    <h2
+                      data-plasmic-name={"h2"}
+                      data-plasmic-override={overrides.h2}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.h2,
+                        projectcss.__wab_text,
+                        sty.h2
+                      )}
+                    >
+                      {
+                        "Objevte nejlep\u0161\u00ed\naktivity a z\u00e1\u017eitky"
+                      }
+                    </h2>
+                  </div>
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__iAt1)}
+                  >
+                    <h1
+                      data-plasmic-name={"h1"}
+                      data-plasmic-override={overrides.h1}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.h1,
+                        projectcss.__wab_text,
+                        sty.h1
+                      )}
+                    >
+                      {"v Hav\u00ed\u0159ove a okol\u00ed"}
+                    </h1>
+                  </div>
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__vHoqo)}
+                  >
+                    <h3
+                      data-plasmic-name={"h3"}
+                      data-plasmic-override={overrides.h3}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.h3,
+                        projectcss.__wab_text,
+                        sty.h3
+                      )}
+                    >
+                      {"v\u0161e na jednom m\u00edst\u011b."}
+                    </h3>
+                  </div>
+                </div>
+              </div>
             </main>
           </section>
         </div>
@@ -227,21 +456,39 @@ function PlasmicHomepage__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "section", "header", "main", "categoryMenu"],
-  section: ["section", "header", "main", "categoryMenu"],
+  root: [
+    "root",
+    "timer",
+    "header",
+    "main",
+    "categoryMenu",
+    "featureSlider",
+    "h2",
+    "h1",
+    "h3"
+  ],
+  timer: ["timer"],
   header: ["header"],
-  main: ["main", "categoryMenu"],
-  categoryMenu: ["categoryMenu"]
+  main: ["main", "categoryMenu", "featureSlider", "h2", "h1", "h3"],
+  categoryMenu: ["categoryMenu"],
+  featureSlider: ["featureSlider"],
+  h2: ["h2"],
+  h1: ["h1"],
+  h3: ["h3"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  section: "section";
+  timer: typeof Timer;
   header: typeof Header;
   main: "main";
   categoryMenu: typeof CategoryMenu;
+  featureSlider: typeof FeatureSlider;
+  h2: "h2";
+  h1: "h1";
+  h3: "h3";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -304,10 +551,14 @@ export const PlasmicHomepage = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    section: makeNodeComponent("section"),
+    timer: makeNodeComponent("timer"),
     header: makeNodeComponent("header"),
     main: makeNodeComponent("main"),
     categoryMenu: makeNodeComponent("categoryMenu"),
+    featureSlider: makeNodeComponent("featureSlider"),
+    h2: makeNodeComponent("h2"),
+    h1: makeNodeComponent("h1"),
+    h3: makeNodeComponent("h3"),
 
     // Metadata about props expected for PlasmicHomepage
     internalVariantProps: PlasmicHomepage__VariantProps,

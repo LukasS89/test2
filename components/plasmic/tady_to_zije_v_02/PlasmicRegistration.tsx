@@ -60,8 +60,15 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Header from "../../Header"; // plasmic-import: uZX7p1wyVbCa/component
-import { AntdTextArea } from "@plasmicpkgs/antd5/skinny/registerInput";
-import { inputHelpers as AntdTextArea_Helpers } from "@plasmicpkgs/antd5/skinny/registerInput";
+import { FormWrapper } from "@plasmicpkgs/antd5/skinny/Form";
+import { formHelpers as FormWrapper_Helpers } from "@plasmicpkgs/antd5/skinny/Form";
+import { Register } from "@components/Register"; // plasmic-import: QvlviuoUtmLy/codeComponent
+import { FormItemWrapper } from "@plasmicpkgs/antd5/skinny/FormItem";
+import { AntdInput } from "@plasmicpkgs/antd5/skinny/registerInput";
+import { inputHelpers as AntdInput_Helpers } from "@plasmicpkgs/antd5/skinny/registerInput";
+import { AntdPassword } from "@plasmicpkgs/antd5/skinny/registerInput";
+import { inputHelpers as AntdPassword_Helpers } from "@plasmicpkgs/antd5/skinny/registerInput";
+import { AntdButton } from "@plasmicpkgs/antd5/skinny/registerButton";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -89,8 +96,9 @@ export type PlasmicRegistration__OverridesType = {
   left?: Flex__<"div">;
   img?: Flex__<typeof PlasmicImg__>;
   right?: Flex__<"div">;
-  textArea?: Flex__<typeof AntdTextArea>;
-  textArea2?: Flex__<typeof AntdTextArea>;
+  form2?: Flex__<typeof FormWrapper>;
+  loginButton2?: Flex__<typeof AntdButton>;
+  register?: Flex__<typeof Register>;
 };
 
 export interface DefaultRegistrationProps {}
@@ -136,20 +144,22 @@ function PlasmicRegistration__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "textArea.value",
+        path: "form2.value",
         type: "private",
-        variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "email",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
-        onMutate: generateOnMutateForSpec("value", AntdTextArea_Helpers)
+        refName: "form2",
+        onMutate: generateOnMutateForSpec("value", FormWrapper_Helpers)
       },
       {
-        path: "textArea2.value",
+        path: "form2.isSubmitting",
         type: "private",
-        variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "pass",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false,
 
-        onMutate: generateOnMutateForSpec("value", AntdTextArea_Helpers)
+        refName: "form2",
+        onMutate: generateOnMutateForSpec("isSubmitting", FormWrapper_Helpers)
       }
     ],
     [$props, $ctx, $refs]
@@ -247,131 +257,338 @@ function PlasmicRegistration__RenderFunc(props: {
                     }
                   })()}
                 >
-                  {(() => {
-                    const child$Props = {
-                      className: classNames("__wab_instance", sty.textArea),
-                      onChange: generateStateOnChangePropForCodeComponents(
-                        $state,
-                        "value",
-                        ["textArea", "value"],
-                        AntdTextArea_Helpers
-                      ),
-                      value: generateStateValueProp($state, [
-                        "textArea",
-                        "value"
-                      ])
-                    };
-                    initializeCodeComponentStates(
-                      $state,
-                      [
-                        {
-                          name: "value",
-                          plasmicStateName: "textArea.value"
-                        }
-                      ],
-                      [],
-                      AntdTextArea_Helpers ?? {},
-                      child$Props
-                    );
-
-                    return (
-                      <AntdTextArea
-                        data-plasmic-name={"textArea"}
-                        data-plasmic-override={overrides.textArea}
-                        {...child$Props}
-                      />
-                    );
-                  })()}
-                  {(() => {
-                    const child$Props = {
-                      className: classNames("__wab_instance", sty.textArea2),
-                      onChange: generateStateOnChangePropForCodeComponents(
-                        $state,
-                        "value",
-                        ["textArea2", "value"],
-                        AntdTextArea_Helpers
-                      ),
-                      value: generateStateValueProp($state, [
-                        "textArea2",
-                        "value"
-                      ])
-                    };
-                    initializeCodeComponentStates(
-                      $state,
-                      [
-                        {
-                          name: "value",
-                          plasmicStateName: "textArea2.value"
-                        }
-                      ],
-                      [],
-                      AntdTextArea_Helpers ?? {},
-                      child$Props
-                    );
-
-                    return (
-                      <AntdTextArea
-                        data-plasmic-name={"textArea2"}
-                        data-plasmic-override={overrides.textArea2}
-                        {...child$Props}
-                      />
-                    );
-                  })()}
                   <div
-                    className={classNames(projectcss.all, sty.freeBox___4GVs1)}
-                    onClick={async event => {
-                      const $steps = {};
+                    className={classNames(projectcss.all, sty.freeBox__l177Z)}
+                  >
+                    {(() => {
+                      const child$Props = {
+                        autoDisableWhileSubmitting: true,
+                        className: classNames("__wab_instance", sty.form2),
+                        extendedOnValuesChange: async (...eventArgs: any) => {
+                          generateStateOnChangePropForCodeComponents(
+                            $state,
+                            "value",
+                            ["form2", "value"],
+                            FormWrapper_Helpers
+                          ).apply(null, eventArgs);
+                        },
+                        formItems: undefined,
+                        initialValues: undefined,
+                        labelCol: { span: 8, horizontalOnly: true },
+                        layout: "vertical",
+                        mode: undefined,
+                        onFinish: async values => {
+                          const $steps = {};
 
-                      $steps["runActionOnLogin"] = true
-                        ? (() => {
-                            const actionArgs = {};
-                            return (({ tplRef, action, args }) => {
-                              return $refs?.[tplRef]?.[action]?.(
-                                ...(args ?? [])
-                              );
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["runActionOnLogin"] != null &&
-                        typeof $steps["runActionOnLogin"] === "object" &&
-                        typeof $steps["runActionOnLogin"].then === "function"
-                      ) {
-                        $steps["runActionOnLogin"] = await $steps[
-                          "runActionOnLogin"
-                        ];
-                      }
+                          $steps["runActionOnRegister"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  tplRef: "register",
+                                  action: "triggerRegister"
+                                };
+                                return (({ tplRef, action, args }) => {
+                                  return $refs?.[tplRef]?.[action]?.(
+                                    ...(args ?? [])
+                                  );
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["runActionOnRegister"] != null &&
+                            typeof $steps["runActionOnRegister"] === "object" &&
+                            typeof $steps["runActionOnRegister"].then ===
+                              "function"
+                          ) {
+                            $steps["runActionOnRegister"] = await $steps[
+                              "runActionOnRegister"
+                            ];
+                          }
+                        },
+                        onIsSubmittingChange: async (...eventArgs: any) => {
+                          generateStateOnChangePropForCodeComponents(
+                            $state,
+                            "isSubmitting",
+                            ["form2", "isSubmitting"],
+                            FormWrapper_Helpers
+                          ).apply(null, eventArgs);
+                        },
+                        ref: ref => {
+                          $refs["form2"] = ref;
+                        },
+                        wrapperCol: { span: 16, horizontalOnly: true }
+                      };
+                      initializeCodeComponentStates(
+                        $state,
+                        [
+                          {
+                            name: "value",
+                            plasmicStateName: "form2.value"
+                          },
+                          {
+                            name: "isSubmitting",
+                            plasmicStateName: "form2.isSubmitting"
+                          }
+                        ],
+                        [],
+                        FormWrapper_Helpers ?? {},
+                        child$Props
+                      );
 
-                      $steps["goToHomepage"] = true
-                        ? (() => {
-                            const actionArgs = { destination: `/` };
-                            return (({ destination }) => {
-                              if (
-                                typeof destination === "string" &&
-                                destination.startsWith("#")
-                              ) {
-                                document
-                                  .getElementById(destination.substr(1))
-                                  .scrollIntoView({ behavior: "smooth" });
-                              } else {
-                                __nextRouter?.push(destination);
-                              }
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["goToHomepage"] != null &&
-                        typeof $steps["goToHomepage"] === "object" &&
-                        typeof $steps["goToHomepage"].then === "function"
-                      ) {
-                        $steps["goToHomepage"] = await $steps["goToHomepage"];
-                      }
-                    }}
-                  />
+                      return (
+                        <FormWrapper
+                          data-plasmic-name={"form2"}
+                          data-plasmic-override={overrides.form2}
+                          {...child$Props}
+                        >
+                          <FormItemWrapper
+                            className={classNames(
+                              "__wab_instance",
+                              sty.formField__ssd2A
+                            )}
+                            label={"K\u0159estn\u00ed jm\u00e9no"}
+                            name={"firstName"}
+                            preserve={false}
+                          >
+                            <AntdInput
+                              className={classNames(
+                                "__wab_instance",
+                                sty.input___39Za
+                              )}
+                            />
+                          </FormItemWrapper>
+                          <FormItemWrapper
+                            className={classNames(
+                              "__wab_instance",
+                              sty.formField__lJvd
+                            )}
+                            label={"P\u0159\u00edjmen\u00ed"}
+                            name={"surName"}
+                            preserve={false}
+                          >
+                            <AntdInput
+                              className={classNames(
+                                "__wab_instance",
+                                sty.input___7DkTa
+                              )}
+                            />
+                          </FormItemWrapper>
+                          <FormItemWrapper
+                            className={classNames(
+                              "__wab_instance",
+                              sty.formField__qeQw5
+                            )}
+                            label={"U\u017eivatelsk\u00e9 jm\u00e9no"}
+                            name={"userName"}
+                            rules={[{ ruleType: "required" }]}
+                          >
+                            <AntdInput
+                              className={classNames(
+                                "__wab_instance",
+                                sty.input___97Ri
+                              )}
+                            />
+                          </FormItemWrapper>
+                          <FormItemWrapper
+                            className={classNames(
+                              "__wab_instance",
+                              sty.formField__srWmz
+                            )}
+                            label={"P\u0159ihla\u0161ovac\u00ed e-mail"}
+                            name={"email"}
+                            rules={[{ ruleType: "required" }]}
+                          >
+                            <AntdInput
+                              className={classNames(
+                                "__wab_instance",
+                                sty.input__asG0H
+                              )}
+                            />
+                          </FormItemWrapper>
+                          <FormItemWrapper
+                            className={classNames(
+                              "__wab_instance",
+                              sty.formField__sg2K
+                            )}
+                            initialValue={"password"}
+                            label={"Heslo"}
+                            rules={[{ ruleType: "required" }]}
+                          >
+                            <AntdPassword
+                              className={classNames(
+                                "__wab_instance",
+                                sty.passwordInput___2EHat
+                              )}
+                            />
+                          </FormItemWrapper>
+                          <FormItemWrapper
+                            className={classNames(
+                              "__wab_instance",
+                              sty.formField__idHsW
+                            )}
+                            label={"Heslo znovu"}
+                            name={"passCheck"}
+                            rules={[{ ruleType: "required" }]}
+                          >
+                            <AntdPassword
+                              className={classNames(
+                                "__wab_instance",
+                                sty.passwordInput__zP5X
+                              )}
+                            />
+                          </FormItemWrapper>
+                          <AntdButton
+                            className={classNames(
+                              "__wab_instance",
+                              sty.loginButton2
+                            )}
+                            loading={false}
+                            submitsForm={true}
+                            type={"default"}
+                          >
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__aafUz
+                              )}
+                            >
+                              {"Zaregistrovat se"}
+                            </div>
+                          </AntdButton>
+                        </FormWrapper>
+                      );
+                    })()}
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        sty.freeBox___3N0Dp
+                      )}
+                    >
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__kFecT
+                        )}
+                      >
+                        {"Zp\u011bt na "}
+                      </div>
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__wgwje
+                        )}
+                        onClick={async event => {
+                          const $steps = {};
+
+                          $steps["goToLogin"] = true
+                            ? (() => {
+                                const actionArgs = { destination: `/login` };
+                                return (({ destination }) => {
+                                  if (
+                                    typeof destination === "string" &&
+                                    destination.startsWith("#")
+                                  ) {
+                                    document
+                                      .getElementById(destination.substr(1))
+                                      .scrollIntoView({ behavior: "smooth" });
+                                  } else {
+                                    __nextRouter?.push(destination);
+                                  }
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["goToLogin"] != null &&
+                            typeof $steps["goToLogin"] === "object" &&
+                            typeof $steps["goToLogin"].then === "function"
+                          ) {
+                            $steps["goToLogin"] = await $steps["goToLogin"];
+                          }
+                        }}
+                      >
+                        {"Login"}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </main>
           </section>
+          <Register
+            data-plasmic-name={"register"}
+            data-plasmic-override={overrides.register}
+            className={classNames("__wab_instance", sty.register)}
+            email={(() => {
+              try {
+                return $state.form2.value.email;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "user@example.com";
+                }
+                throw e;
+              }
+            })()}
+            firstName={(() => {
+              try {
+                return $state.form2.value.firstName;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "John";
+                }
+                throw e;
+              }
+            })()}
+            lastName={(() => {
+              try {
+                return $state.form2.value.surName;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "Doe";
+                }
+                throw e;
+              }
+            })()}
+            password={(() => {
+              try {
+                return $state.form2.value.password;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "password123";
+                }
+                throw e;
+              }
+            })()}
+            ref={ref => {
+              $refs["register"] = ref;
+            }}
+            userName={(() => {
+              try {
+                return $state.form2.value.userName;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "johndoe";
+                }
+                throw e;
+              }
+            })()}
+          />
         </div>
       </div>
     </React.Fragment>
@@ -387,8 +604,9 @@ const PlasmicDescendants = {
     "left",
     "img",
     "right",
-    "textArea",
-    "textArea2"
+    "form2",
+    "loginButton2",
+    "register"
   ],
   section: [
     "section",
@@ -397,16 +615,17 @@ const PlasmicDescendants = {
     "left",
     "img",
     "right",
-    "textArea",
-    "textArea2"
+    "form2",
+    "loginButton2"
   ],
   header: ["header"],
-  main: ["main", "left", "img", "right", "textArea", "textArea2"],
+  main: ["main", "left", "img", "right", "form2", "loginButton2"],
   left: ["left", "img"],
   img: ["img"],
-  right: ["right", "textArea", "textArea2"],
-  textArea: ["textArea"],
-  textArea2: ["textArea2"]
+  right: ["right", "form2", "loginButton2"],
+  form2: ["form2", "loginButton2"],
+  loginButton2: ["loginButton2"],
+  register: ["register"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -419,8 +638,9 @@ type NodeDefaultElementType = {
   left: "div";
   img: typeof PlasmicImg__;
   right: "div";
-  textArea: typeof AntdTextArea;
-  textArea2: typeof AntdTextArea;
+  form2: typeof FormWrapper;
+  loginButton2: typeof AntdButton;
+  register: typeof Register;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -489,8 +709,9 @@ export const PlasmicRegistration = Object.assign(
     left: makeNodeComponent("left"),
     img: makeNodeComponent("img"),
     right: makeNodeComponent("right"),
-    textArea: makeNodeComponent("textArea"),
-    textArea2: makeNodeComponent("textArea2"),
+    form2: makeNodeComponent("form2"),
+    loginButton2: makeNodeComponent("loginButton2"),
+    register: makeNodeComponent("register"),
 
     // Metadata about props expected for PlasmicRegistration
     internalVariantProps: PlasmicRegistration__VariantProps,

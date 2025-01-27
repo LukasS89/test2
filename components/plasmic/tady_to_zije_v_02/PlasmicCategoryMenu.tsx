@@ -59,14 +59,9 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import {
-  executePlasmicDataOp,
-  usePlasmicDataOp,
-  usePlasmicInvalidate
-} from "@plasmicapp/react-web/lib/data-sources";
-
-import CategoryItem from "../../CategoryItem"; // plasmic-import: Sa03e9TtRTn9/component
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
+import { DataFetcher } from "@plasmicpkgs/plasmic-query";
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import CategoryItem2 from "../../CategoryItem2"; // plasmic-import: K8RW5DNl8CRn/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -83,30 +78,44 @@ type VariantPropType = keyof PlasmicCategoryMenu__VariantsArgs;
 export const PlasmicCategoryMenu__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicCategoryMenu__ArgsType = {
+  selectedItem?: any;
   onSelectedItemChange?: (val: string) => void;
   url?: string;
   selectedSubcategory?: any;
   onSelectedSubcategoryChange?: (val: string) => void;
+  selectedEvent?: any;
+  onSelectedEventChange?: (val: string) => void;
+  eventUrl?: string;
 };
 type ArgPropType = keyof PlasmicCategoryMenu__ArgsType;
 export const PlasmicCategoryMenu__ArgProps = new Array<ArgPropType>(
+  "selectedItem",
   "onSelectedItemChange",
   "url",
   "selectedSubcategory",
-  "onSelectedSubcategoryChange"
+  "onSelectedSubcategoryChange",
+  "selectedEvent",
+  "onSelectedEventChange",
+  "eventUrl"
 );
 
 export type PlasmicCategoryMenu__OverridesType = {
   root?: Flex__<"div">;
+  httpRestApiFetcher?: Flex__<typeof DataFetcher>;
+  sideEffect?: Flex__<typeof SideEffect>;
   link?: Flex__<"a"> & Partial<LinkProps>;
-  categoryItem?: Flex__<typeof CategoryItem>;
+  categoryItem2?: Flex__<typeof CategoryItem2>;
 };
 
 export interface DefaultCategoryMenuProps {
+  selectedItem?: any;
   onSelectedItemChange?: (val: string) => void;
   url?: string;
   selectedSubcategory?: any;
   onSelectedSubcategoryChange?: (val: string) => void;
+  selectedEvent?: any;
+  onSelectedEventChange?: (val: string) => void;
+  eventUrl?: string;
   className?: string;
 }
 
@@ -148,32 +157,14 @@ function PlasmicCategoryMenu__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  let [$queries, setDollarQueries] = React.useState<
-    Record<string, ReturnType<typeof usePlasmicDataOp>>
-  >({});
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "selectedItem",
-        type: "readonly",
+        type: "writable",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return $queries.query.data.find(
-                item => item.webURL === $props.url
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return {};
-              }
-              throw e;
-            }
-          })(),
 
+        valueProp: "selectedItem",
         onChangeProp: "onSelectedItemChange"
       },
       {
@@ -183,6 +174,14 @@ function PlasmicCategoryMenu__RenderFunc(props: {
 
         valueProp: "selectedSubcategory",
         onChangeProp: "onSelectedSubcategoryChange"
+      },
+      {
+        path: "selectedEvent",
+        type: "writable",
+        variableType: "object",
+
+        valueProp: "selectedEvent",
+        onChangeProp: "onSelectedEventChange"
       }
     ],
     [$props, $ctx, $refs]
@@ -190,39 +189,9 @@ function PlasmicCategoryMenu__RenderFunc(props: {
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
-    $queries: $queries,
+    $queries: {},
     $refs
   });
-
-  const new$Queries: Record<string, ReturnType<typeof usePlasmicDataOp>> = {
-    query: usePlasmicDataOp(() => {
-      return {
-        sourceId: "f8Ug9pq9YCTH5iNERcsX8T",
-        opId: "d4b90783-4754-4b9a-9075-e33c1c58077c",
-        userArgs: {},
-        cacheKey: `plasmic.$.${(() => {
-          try {
-            return "category";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return "";
-            }
-            throw e;
-          }
-        })()}.$.d4b90783-4754-4b9a-9075-e33c1c58077c.$.`,
-        invalidatedKeys: null,
-        roleId: null
-      };
-    })
-  };
-  if (Object.keys(new$Queries).some(k => new$Queries[k] !== $queries[k])) {
-    setDollarQueries(new$Queries);
-
-    $queries = new$Queries;
-  }
 
   return (
     <div
@@ -241,10 +210,112 @@ function PlasmicCategoryMenu__RenderFunc(props: {
         sty.root
       )}
     >
+      <DataFetcher
+        data-plasmic-name={"httpRestApiFetcher"}
+        data-plasmic-override={overrides.httpRestApiFetcher}
+        className={classNames("__wab_instance", sty.httpRestApiFetcher)}
+        dataName={"categoryCall"}
+        errorDisplay={null}
+        errorName={"catCallError"}
+        headers={{
+          "Content-Type": "application/json",
+          apikey:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucmZkeHRzZHZteGhqc29xb2lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE4MjQyNTcsImV4cCI6MjAzNzQwMDI1N30.N-1_fY2KLrl9sxmeM8z3bRc-b0ksQ0C4IWQpugCs65I"
+        }}
+        loadingDisplay={null}
+        method={"GET"}
+        noLayout={true}
+        queryKey={"category"}
+        url={"https://rnrfdxtsdvmxhjsoqoid.supabase.co/rest/v1/category"}
+      >
+        <DataCtxReader__>
+          {$ctx => (
+            <SideEffect
+              data-plasmic-name={"sideEffect"}
+              data-plasmic-override={overrides.sideEffect}
+              className={classNames("__wab_instance", sty.sideEffect)}
+              onMount={async () => {
+                const $steps = {};
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (() => {
+                            return (async () => {
+                              try {
+                                if (typeof window !== "undefined") {
+                                  const cacheExpiration = 24 * 60 * 60 * 1000;
+                                  const currentTime = new Date().getTime();
+                                  const cachedData = JSON.parse(
+                                    localStorage.getItem("queryCache")
+                                  );
+                                  const cacheTimestamp =
+                                    localStorage.getItem("cacheTimestamp");
+                                  const isCacheExpired =
+                                    !cacheTimestamp ||
+                                    currentTime - cacheTimestamp >
+                                      cacheExpiration;
+                                  const isCacheEmpty =
+                                    !cachedData ||
+                                    !cachedData.category ||
+                                    cachedData.category.length === 0;
+                                  if (isCacheExpired || isCacheEmpty) {
+                                    const categoryData = $ctx.categoryCall;
+                                    if (categoryData) {
+                                      const sortedCategoryData =
+                                        categoryData.sort((a, b) =>
+                                          a.id > b.id ? 1 : -1
+                                        );
+                                      const queryCacheData = {
+                                        category: sortedCategoryData
+                                      };
+                                      localStorage.setItem(
+                                        "queryCache",
+                                        JSON.stringify(queryCacheData)
+                                      );
+                                      localStorage.setItem(
+                                        "cacheTimestamp",
+                                        currentTime.toString()
+                                      );
+                                    }
+                                  }
+                                }
+                              } catch (error) {
+                                console.error("Error:", error);
+                              }
+                            })();
+                          })();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+              }}
+            />
+          )}
+        </DataCtxReader__>
+      </DataFetcher>
       {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
         (() => {
           try {
-            return $queries.query.data;
+            return [
+              "Sport a volný čas",
+              "Kultura a akce",
+              "Pro děti",
+              "Služby a vzdělávání",
+              "Relax a zdraví",
+              "Městské aktivity"
+            ];
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -268,14 +339,17 @@ function PlasmicCategoryMenu__RenderFunc(props: {
             onClick={async event => {
               const $steps = {};
 
-              $steps["updateSelectedSubcategory"] = true
+              $steps["updateSelectedItem"] = true
                 ? (() => {
                     const actionArgs = {
                       variable: {
                         objRoot: $state,
-                        variablePath: ["selectedSubcategory"]
+                        variablePath: ["selectedItem"]
                       },
-                      operation: 1
+                      operation: 0,
+                      value: JSON.parse(
+                        localStorage.getItem("queryCache")
+                      ).category.find(item => item.name === currentItem)
                     };
                     return (({ variable, value, startIndex, deleteCount }) => {
                       if (!variable) {
@@ -283,18 +357,18 @@ function PlasmicCategoryMenu__RenderFunc(props: {
                       }
                       const { objRoot, variablePath } = variable;
 
-                      $stateSet(objRoot, variablePath, undefined);
-                      return undefined;
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
                     })?.apply(null, [actionArgs]);
                   })()
                 : undefined;
               if (
-                $steps["updateSelectedSubcategory"] != null &&
-                typeof $steps["updateSelectedSubcategory"] === "object" &&
-                typeof $steps["updateSelectedSubcategory"].then === "function"
+                $steps["updateSelectedItem"] != null &&
+                typeof $steps["updateSelectedItem"] === "object" &&
+                typeof $steps["updateSelectedItem"].then === "function"
               ) {
-                $steps["updateSelectedSubcategory"] = await $steps[
-                  "updateSelectedSubcategory"
+                $steps["updateSelectedItem"] = await $steps[
+                  "updateSelectedItem"
                 ];
               }
 
@@ -303,7 +377,10 @@ function PlasmicCategoryMenu__RenderFunc(props: {
                     const actionArgs = {
                       destination: `/${(() => {
                         try {
-                          return currentItem.webURL;
+                          return JSON.parse(
+                            localStorage.getItem("queryCache")
+                          ).category.find(item => item.name === currentItem)
+                            .webURL;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -339,15 +416,51 @@ function PlasmicCategoryMenu__RenderFunc(props: {
             }}
             platform={"nextjs"}
           >
-            <CategoryItem
-              data-plasmic-name={"categoryItem"}
-              data-plasmic-override={overrides.categoryItem}
-              className={classNames("__wab_instance", sty.categoryItem)}
-              color={currentItem.color}
-              currentIndex={currentIndex}
-              currentItem={currentItem}
-              selectedItem={$state.selectedItem}
-              url={currentItem.webURL}
+            <CategoryItem2
+              data-plasmic-name={"categoryItem2"}
+              data-plasmic-override={overrides.categoryItem2}
+              className={classNames("__wab_instance", sty.categoryItem2)}
+              color={(() => {
+                try {
+                  return JSON.parse(
+                    localStorage.getItem("queryCache")
+                  ).category.find(item => item.name === currentItem).color;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "#222222";
+                  }
+                  throw e;
+                }
+              })()}
+              isSelected={(() => {
+                try {
+                  return $state.selectedItem.name === currentItem;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return false;
+                  }
+                  throw e;
+                }
+              })()}
+              name={(() => {
+                try {
+                  return currentItem;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
             />
           </PlasmicLink__>
         );
@@ -357,17 +470,21 @@ function PlasmicCategoryMenu__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "link", "categoryItem"],
-  link: ["link", "categoryItem"],
-  categoryItem: ["categoryItem"]
+  root: ["root", "httpRestApiFetcher", "sideEffect", "link", "categoryItem2"],
+  httpRestApiFetcher: ["httpRestApiFetcher", "sideEffect"],
+  sideEffect: ["sideEffect"],
+  link: ["link", "categoryItem2"],
+  categoryItem2: ["categoryItem2"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  httpRestApiFetcher: typeof DataFetcher;
+  sideEffect: typeof SideEffect;
   link: "a";
-  categoryItem: typeof CategoryItem;
+  categoryItem2: typeof CategoryItem2;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -430,8 +547,10 @@ export const PlasmicCategoryMenu = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
+    sideEffect: makeNodeComponent("sideEffect"),
     link: makeNodeComponent("link"),
-    categoryItem: makeNodeComponent("categoryItem"),
+    categoryItem2: makeNodeComponent("categoryItem2"),
 
     // Metadata about props expected for PlasmicCategoryMenu
     internalVariantProps: PlasmicCategoryMenu__VariantProps,

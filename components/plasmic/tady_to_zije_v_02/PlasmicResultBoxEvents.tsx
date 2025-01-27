@@ -90,6 +90,7 @@ export type PlasmicResultBoxEvents__OverridesType = {
   root?: Flex__<"section">;
   imagePreview?: Flex__<typeof PlasmicImg__>;
   h3?: Flex__<"h3">;
+  overlay?: Flex__<"div">;
 };
 
 export interface DefaultResultBoxEventsProps {
@@ -137,6 +138,11 @@ function PlasmicResultBoxEvents__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const [isRootHover, triggerRootHoverProps] = useTrigger("useHover", {});
+  const triggers = {
+    hover_root: isRootHover
+  };
+
   return (
     <section
       data-plasmic-name={"root"}
@@ -153,25 +159,46 @@ function PlasmicResultBoxEvents__RenderFunc(props: {
         plasmic_plasmic_rich_components_css.plasmic_tokens,
         sty.root
       )}
+      data-plasmic-trigger-props={[triggerRootHoverProps]}
     >
       <div className={classNames(projectcss.all, sty.freeBox__mrs0J)}>
         <div className={classNames(projectcss.all, sty.freeBox___96R1C)}>
-          <PlasmicImg__
-            data-plasmic-name={"imagePreview"}
-            data-plasmic-override={overrides.imagePreview}
-            alt={""}
-            className={classNames(sty.imagePreview)}
-            displayHeight={"100%"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"none"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"100%"}
-            height={"auto"}
-            loading={"eager"}
-            src={$props.data.gallery[0]}
-            width={"100%"}
-          />
+          {(() => {
+            try {
+              return $props.data.thumbnail > 0
+                ? true
+                : $props.data.gallery && $props.data.gallery.length > 0;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <PlasmicImg__
+              data-plasmic-name={"imagePreview"}
+              data-plasmic-override={overrides.imagePreview}
+              alt={""}
+              className={classNames(sty.imagePreview)}
+              displayHeight={"100%"}
+              displayMaxHeight={"none"}
+              displayMaxWidth={"none"}
+              displayMinHeight={"0"}
+              displayMinWidth={"0"}
+              displayWidth={"100%"}
+              height={"auto"}
+              loading={"eager"}
+              src={
+                $props.data.thumbnail > 0
+                  ? $props.data.thumbnail
+                  : $props.data.gallery[0]
+              }
+              width={"100%"}
+            />
+          ) : null}
         </div>
         <div className={classNames(projectcss.all, sty.freeBox__pbu2X)}>
           <h3
@@ -275,14 +302,39 @@ function PlasmicResultBoxEvents__RenderFunc(props: {
           </div>
         </div>
       </div>
+      <div
+        data-plasmic-name={"overlay"}
+        data-plasmic-override={overrides.overlay}
+        className={classNames(projectcss.all, sty.overlay)}
+        style={
+          triggers.hover_root
+            ? (() => {
+                try {
+                  return {
+                    backgroundColor: `${$props.color}25`
+                  };
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()
+            : undefined
+        }
+      />
     </section>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "imagePreview", "h3"],
+  root: ["root", "imagePreview", "h3", "overlay"],
   imagePreview: ["imagePreview"],
-  h3: ["h3"]
+  h3: ["h3"],
+  overlay: ["overlay"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -291,6 +343,7 @@ type NodeDefaultElementType = {
   root: "section";
   imagePreview: typeof PlasmicImg__;
   h3: "h3";
+  overlay: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -355,6 +408,7 @@ export const PlasmicResultBoxEvents = Object.assign(
     // Helper components rendering sub-elements
     imagePreview: makeNodeComponent("imagePreview"),
     h3: makeNodeComponent("h3"),
+    overlay: makeNodeComponent("overlay"),
 
     // Metadata about props expected for PlasmicResultBoxEvents
     internalVariantProps: PlasmicResultBoxEvents__VariantProps,

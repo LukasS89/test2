@@ -62,6 +62,7 @@ import {
 import Header from "../../Header"; // plasmic-import: uZX7p1wyVbCa/component
 import { FormWrapper } from "@plasmicpkgs/antd5/skinny/Form";
 import { formHelpers as FormWrapper_Helpers } from "@plasmicpkgs/antd5/skinny/Form";
+import { Login } from "@components/Login"; // plasmic-import: 5Ay7Fc19l469/codeComponent
 import { FormItemWrapper } from "@plasmicpkgs/antd5/skinny/FormItem";
 import { AntdInput } from "@plasmicpkgs/antd5/skinny/registerInput";
 import { inputHelpers as AntdInput_Helpers } from "@plasmicpkgs/antd5/skinny/registerInput";
@@ -100,6 +101,7 @@ export type PlasmicLogin__OverridesType = {
   input?: Flex__<typeof AntdInput>;
   passwordInput?: Flex__<typeof AntdPassword>;
   loginButton?: Flex__<typeof AntdButton>;
+  login?: Flex__<typeof Login>;
 };
 
 export interface DefaultLoginProps {}
@@ -256,21 +258,7 @@ function PlasmicLogin__RenderFunc(props: {
                         sty.text__j22Dx
                       )}
                     >
-                      <React.Fragment>
-                        {(() => {
-                          try {
-                            return $state.form.value.email;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return "Welcome to";
-                            }
-                            throw e;
-                          }
-                        })()}
-                      </React.Fragment>
+                      {"Welcome to"}
                     </div>
                     <h1
                       data-plasmic-name={"h1"}
@@ -288,13 +276,14 @@ function PlasmicLogin__RenderFunc(props: {
                       const child$Props = {
                         autoDisableWhileSubmitting: true,
                         className: classNames("__wab_instance", sty.form),
-                        extendedOnValuesChange:
+                        extendedOnValuesChange: async (...eventArgs: any) => {
                           generateStateOnChangePropForCodeComponents(
                             $state,
                             "value",
                             ["form", "value"],
                             FormWrapper_Helpers
-                          ),
+                          ).apply(null, eventArgs);
+                        },
                         formItems: undefined,
                         labelCol: { span: 8, horizontalOnly: true },
                         layout: "vertical",
@@ -304,7 +293,10 @@ function PlasmicLogin__RenderFunc(props: {
 
                           $steps["runActionOnLogin"] = true
                             ? (() => {
-                                const actionArgs = {};
+                                const actionArgs = {
+                                  tplRef: "login",
+                                  action: "triggerLogin"
+                                };
                                 return (({ tplRef, action, args }) => {
                                   return $refs?.[tplRef]?.[action]?.(
                                     ...(args ?? [])
@@ -320,6 +312,29 @@ function PlasmicLogin__RenderFunc(props: {
                           ) {
                             $steps["runActionOnLogin"] = await $steps[
                               "runActionOnLogin"
+                            ];
+                          }
+
+                          $steps["runActionOnForm"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  tplRef: "form",
+                                  action: "clearFields"
+                                };
+                                return (({ tplRef, action, args }) => {
+                                  return $refs?.[tplRef]?.[action]?.(
+                                    ...(args ?? [])
+                                  );
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["runActionOnForm"] != null &&
+                            typeof $steps["runActionOnForm"] === "object" &&
+                            typeof $steps["runActionOnForm"].then === "function"
+                          ) {
+                            $steps["runActionOnForm"] = await $steps[
+                              "runActionOnForm"
                             ];
                           }
 
@@ -350,13 +365,40 @@ function PlasmicLogin__RenderFunc(props: {
                             ];
                           }
                         },
-                        onIsSubmittingChange:
+                        onFinishFailed: async data => {
+                          const $steps = {};
+
+                          $steps["runActionOnForm"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  tplRef: "form",
+                                  action: "clearFields"
+                                };
+                                return (({ tplRef, action, args }) => {
+                                  return $refs?.[tplRef]?.[action]?.(
+                                    ...(args ?? [])
+                                  );
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["runActionOnForm"] != null &&
+                            typeof $steps["runActionOnForm"] === "object" &&
+                            typeof $steps["runActionOnForm"].then === "function"
+                          ) {
+                            $steps["runActionOnForm"] = await $steps[
+                              "runActionOnForm"
+                            ];
+                          }
+                        },
+                        onIsSubmittingChange: async (...eventArgs: any) => {
                           generateStateOnChangePropForCodeComponents(
                             $state,
                             "isSubmitting",
                             ["form", "isSubmitting"],
                             FormWrapper_Helpers
-                          ),
+                          ).apply(null, eventArgs);
+                        },
                         ref: ref => {
                           $refs["form"] = ref;
                         },
@@ -388,7 +430,7 @@ function PlasmicLogin__RenderFunc(props: {
                           <FormItemWrapper
                             className={classNames(
                               "__wab_instance",
-                              sty.formField__c2Lr5
+                              sty.formField__bqKL
                             )}
                             label={"P\u0159ihla\u0161ovac\u00ed e-mail"}
                             name={"email"}
@@ -405,7 +447,7 @@ function PlasmicLogin__RenderFunc(props: {
                           <FormItemWrapper
                             className={classNames(
                               "__wab_instance",
-                              sty.formField__hIMgs
+                              sty.formField__liGoh
                             )}
                             label={"Heslo"}
                             name={"password"}
@@ -424,7 +466,19 @@ function PlasmicLogin__RenderFunc(props: {
                               "__wab_instance",
                               sty.loginButton
                             )}
-                            loading={false}
+                            loading={(() => {
+                              try {
+                                return $state.form.isSubmitting;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return false;
+                                }
+                                throw e;
+                              }
+                            })()}
                             submitsForm={true}
                             type={"default"}
                           >
@@ -432,7 +486,7 @@ function PlasmicLogin__RenderFunc(props: {
                               className={classNames(
                                 projectcss.all,
                                 projectcss.__wab_text,
-                                sty.text___9K6Nu
+                                sty.text__zvodb
                               )}
                             >
                               {"P\u0159ihl\u00e1sti se"}
@@ -447,14 +501,78 @@ function PlasmicLogin__RenderFunc(props: {
                         projectcss.__wab_text,
                         sty.text__fdVMa
                       )}
+                      onClick={async event => {
+                        const $steps = {};
+
+                        $steps["goToRegistration"] = true
+                          ? (() => {
+                              const actionArgs = { destination: `/registrace` };
+                              return (({ destination }) => {
+                                if (
+                                  typeof destination === "string" &&
+                                  destination.startsWith("#")
+                                ) {
+                                  document
+                                    .getElementById(destination.substr(1))
+                                    .scrollIntoView({ behavior: "smooth" });
+                                } else {
+                                  __nextRouter?.push(destination);
+                                }
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["goToRegistration"] != null &&
+                          typeof $steps["goToRegistration"] === "object" &&
+                          typeof $steps["goToRegistration"].then === "function"
+                        ) {
+                          $steps["goToRegistration"] = await $steps[
+                            "goToRegistration"
+                          ];
+                        }
+                      }}
                     >
-                      {"Zaregistruj se"}
+                      {"Zaregistruj se zde"}
                     </div>
                   </div>
                 </div>
               </div>
             </main>
           </section>
+          <Login
+            data-plasmic-name={"login"}
+            data-plasmic-override={overrides.login}
+            className={classNames("__wab_instance", sty.login)}
+            email={(() => {
+              try {
+                return $state.form.value.email;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "user@example.com";
+                }
+                throw e;
+              }
+            })()}
+            password={(() => {
+              try {
+                return $state.form.value.password;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "password123";
+                }
+                throw e;
+              }
+            })()}
+            ref={ref => {
+              $refs["login"] = ref;
+            }}
+          />
         </div>
       </div>
     </React.Fragment>
@@ -474,7 +592,8 @@ const PlasmicDescendants = {
     "form",
     "input",
     "passwordInput",
-    "loginButton"
+    "loginButton",
+    "login"
   ],
   section: [
     "section",
@@ -508,7 +627,8 @@ const PlasmicDescendants = {
   form: ["form", "input", "passwordInput", "loginButton"],
   input: ["input"],
   passwordInput: ["passwordInput"],
-  loginButton: ["loginButton"]
+  loginButton: ["loginButton"],
+  login: ["login"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -526,6 +646,7 @@ type NodeDefaultElementType = {
   input: typeof AntdInput;
   passwordInput: typeof AntdPassword;
   loginButton: typeof AntdButton;
+  login: typeof Login;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -599,6 +720,7 @@ export const PlasmicLogin = Object.assign(
     input: makeNodeComponent("input"),
     passwordInput: makeNodeComponent("passwordInput"),
     loginButton: makeNodeComponent("loginButton"),
+    login: makeNodeComponent("login"),
 
     // Metadata about props expected for PlasmicLogin
     internalVariantProps: PlasmicLogin__VariantProps,

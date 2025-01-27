@@ -24,7 +24,14 @@
     grid-column: 4;
   }
 }
-.section {
+.rootrevealOff > * {
+  grid-column: 4;
+}
+.timer:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.section__qZEyf {
   display: grid;
   position: relative;
   align-content: flex-start;
@@ -40,11 +47,11 @@
     )
     minmax(0, var(--plsmc-wide-chunk)) 1fr var(--plsmc-viewport-gap);
 }
-.section > * {
+.section__qZEyf > * {
   grid-column: 4;
 }
 .header:global(.__wab_instance) {
-  position: fixed;
+  position: sticky;
   left: 0px;
   top: 0px;
   z-index: 1;
@@ -55,7 +62,6 @@
   align-content: flex-start;
   justify-items: center;
   width: 100%;
-  padding-top: 8vh;
   height: 110vh;
   grid-column-start: 1 !important;
   grid-column-end: -1 !important;
@@ -75,4 +81,155 @@
   width: 100%;
   grid-column-start: 1 !important;
   grid-column-end: -1 !important;
+}
+.freeBox__eeJxM {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  transition-property: opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  grid-column-start: 1 !important;
+  grid-column-end: -1 !important;
+  -webkit-transition-property: opacity;
+  -webkit-transition-timing-function: ease-in-out;
+  -webkit-transition-duration: 0.2s;
+}
+.freeBoxrevealOff__eeJxMYqu7 {
+  opacity: 0;
+}
+.section__b98GO {
+  display: grid;
+  align-content: flex-start;
+  justify-items: center;
+  width: 100%;
+  height: 50vh;
+  min-width: 0;
+  flex-shrink: 0;
+  grid-template-columns:
+    var(--plsmc-viewport-gap) 1fr minmax(0, var(--plsmc-wide-chunk))
+    min(
+      var(--plsmc-standard-width),
+      calc(100% - var(--plsmc-viewport-gap) - var(--plsmc-viewport-gap))
+    )
+    minmax(0, var(--plsmc-wide-chunk)) 1fr var(--plsmc-viewport-gap);
+}
+.section__b98GO > * {
+  grid-column: 4;
+}
+.featureSlider:global(.__wab_instance) {
+  width: 100%;
+  height: 50vh;
+  transition-duration: 1s;
+  transition-property: opacity;
+  grid-column-start: 1 !important;
+  grid-column-end: -1 !important;
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 1s;
+}
+.freeBox__gmnwz {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  padding-top: 4vh;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  min-width: 0;
+}
+.freeBox__xlwIh {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  background: var(--token-lH8rUUEt1F7b);
+  border-radius: 60px;
+  padding: 3vh;
+}
+.h2 {
+  width: 15vw;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-size: 2vh;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--token-2-Zse-9pAL_o);
+  text-transform: none;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  white-space: pre-wrap;
+  user-select: text;
+  text-decoration-line: none;
+  text-overflow: clip;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+.freeBox__iAt1 {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  background: var(--token-2-Zse-9pAL_o);
+  border-radius: 60px;
+  padding: 3vh;
+}
+.h1 {
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-size: 2.5vh;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--token-lH8rUUEt1F7b);
+  text-transform: none;
+  line-height: 1;
+  letter-spacing: -1px;
+  white-space: pre-wrap;
+  user-select: text;
+  text-decoration-line: none;
+  width: 20vw;
+  text-overflow: clip;
+  flex-shrink: 0;
+}
+.freeBox__vHoqo {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  background: var(--token-lH8rUUEt1F7b);
+  border-radius: 60px;
+  padding: 3vh;
+}
+.h3 {
+  width: 15vw;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-size: 2vh;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  color: var(--token-2-Zse-9pAL_o);
+  text-transform: none;
+  line-height: 1.2;
+  letter-spacing: normal;
+  white-space: pre-wrap;
+  user-select: text;
+  text-decoration-line: none;
+  text-overflow: clip;
+  opacity: 0.75;
+  flex-shrink: 0;
 }

@@ -20,6 +20,9 @@
 .root > * {
   grid-column: 4;
 }
+.root:hover > * {
+  grid-column: 4;
+}
 .freeBox__mrs0J {
   display: flex;
   flex-direction: column;
@@ -85,7 +88,7 @@
   text-decoration-line: none;
   text-overflow: clip;
   color: var(--token-2-Zse-9pAL_o);
-  font-size: 150%;
+  font-size: 2vh;
   min-width: 0;
 }
 .text__iwfm9 {
@@ -94,6 +97,7 @@
   height: auto;
   max-width: 100%;
   padding-top: 3%;
+  font-size: 1.5vh;
   min-width: 0;
 }
 .freeBox__pa1R0 {
@@ -131,4 +135,21 @@
   text-decoration-line: none;
   text-overflow: clip;
   min-width: 0;
+}
+.overlay {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  transition-property: background;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  grid-column-start: 1 !important;
+  grid-column-end: -1 !important;
+  -webkit-transition-property: background;
+  -webkit-transition-timing-function: ease-in-out;
+  -webkit-transition-duration: 0.2s;
 }

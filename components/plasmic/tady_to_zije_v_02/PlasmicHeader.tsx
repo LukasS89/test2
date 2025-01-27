@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { AntdDropdown } from "@plasmicpkgs/antd5/skinny/registerDropdown";
+import { Logout } from "@components/Logout"; // plasmic-import: bOstTOy5OKvR/codeComponent
 import { AntdMenuItem } from "@plasmicpkgs/antd5/skinny/registerMenu";
 import { AntdButton } from "@plasmicpkgs/antd5/skinny/registerButton";
 
@@ -82,15 +83,17 @@ type ArgPropType = keyof PlasmicHeader__ArgsType;
 export const PlasmicHeader__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicHeader__OverridesType = {
-  header?: Flex__<"section">;
+  header?: Flex__<"header">;
   framepost?: Flex__<"div">;
   web?: Flex__<"h2">;
   web2?: Flex__<"h2">;
   web3?: Flex__<"h2">;
   web4?: Flex__<"h2">;
   web5?: Flex__<"h2">;
+  h6?: Flex__<"h6">;
   dropdown?: Flex__<typeof AntdDropdown>;
   button?: Flex__<typeof AntdButton>;
+  logout?: Flex__<typeof Logout>;
 };
 
 export interface DefaultHeaderProps {
@@ -136,7 +139,7 @@ function PlasmicHeader__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <section
+    <header
       data-plasmic-name={"header"}
       data-plasmic-override={overrides.header}
       data-plasmic-root={true}
@@ -152,7 +155,24 @@ function PlasmicHeader__RenderFunc(props: {
         sty.header
       )}
     >
-      <div className={classNames(projectcss.all, sty.freeBox__vZcwX)}>
+      <div
+        className={classNames(projectcss.all, sty.freeBox__vZcwX)}
+        style={(() => {
+          try {
+            return {
+              gap: "0.5vw"
+            };
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+      >
         <div
           data-plasmic-name={"framepost"}
           data-plasmic-override={overrides.framepost}
@@ -189,6 +209,21 @@ function PlasmicHeader__RenderFunc(props: {
               $steps["goToHomepage"] = await $steps["goToHomepage"];
             }
           }}
+          style={(() => {
+            try {
+              return {
+                width: "calc(100%/6)"
+              };
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
         >
           {"Logo - n\u00e1zev"}
         </div>
@@ -197,7 +232,8 @@ function PlasmicHeader__RenderFunc(props: {
           style={(() => {
             try {
               return {
-                gap: "3vw"
+                gap: "3vw",
+                width: "calc(100%/6*4)"
               };
             } catch (e) {
               if (
@@ -269,11 +305,119 @@ function PlasmicHeader__RenderFunc(props: {
               projectcss.__wab_text,
               sty.web5
             )}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["goToRegistration2"] = true
+                ? (() => {
+                    const actionArgs = {
+                      destination: `/registrace-provozovatel`
+                    };
+                    return (({ destination }) => {
+                      if (
+                        typeof destination === "string" &&
+                        destination.startsWith("#")
+                      ) {
+                        document
+                          .getElementById(destination.substr(1))
+                          .scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        __nextRouter?.push(destination);
+                      }
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["goToRegistration2"] != null &&
+                typeof $steps["goToRegistration2"] === "object" &&
+                typeof $steps["goToRegistration2"].then === "function"
+              ) {
+                $steps["goToRegistration2"] = await $steps["goToRegistration2"];
+              }
+            }}
           >
             {"registrace firmy"}
           </h2>
         </div>
-        <div className={classNames(projectcss.all, sty.freeBox__uwh1Q)}>
+        <div
+          className={classNames(projectcss.all, sty.freeBox__vfQny)}
+          style={(() => {
+            try {
+              return {
+                width: "calc(100%/6/2)"
+              };
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
+          {(() => {
+            try {
+              return $ctx.userData.isLogged === true ? true : false;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <h6
+              data-plasmic-name={"h6"}
+              data-plasmic-override={overrides.h6}
+              className={classNames(
+                projectcss.all,
+                projectcss.h6,
+                projectcss.__wab_text,
+                sty.h6
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return (
+                      $ctx.userData.providerName || $ctx.userData.firstName
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </h6>
+          ) : null}
+        </div>
+        <div
+          className={classNames(projectcss.all, sty.freeBox__uwh1Q)}
+          style={(() => {
+            try {
+              return {
+                width: "calc(100%/6/2)"
+              };
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
           <AntdDropdown
             data-plasmic-name={"dropdown"}
             data-plasmic-override={overrides.dropdown}
@@ -315,24 +459,158 @@ function PlasmicHeader__RenderFunc(props: {
             )}
             menuItemsJson={(() => {
               const __composite = [
-                { type: null, value: "action1", label: null },
-                { type: "item", value: "action2", label: null },
-                { type: "item", label: null },
+                { type: null, value: "action1", label: null, onClick: null },
+                { type: "item", value: "action2", label: null, onClick: null },
+                { type: "item", label: null, onClick: null },
+                { type: null, label: null, onClick: null },
                 { type: null },
                 { type: "item", label: null, onClick: null }
               ];
               __composite["0"]["type"] = "item";
               __composite["0"]["label"] = "Aktivity";
+              __composite["0"]["onClick"] = async info => {
+                const $steps = {};
+
+                $steps["goToDashboardProvider"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: `/provozovatel/${"activity"}`
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToDashboardProvider"] != null &&
+                  typeof $steps["goToDashboardProvider"] === "object" &&
+                  typeof $steps["goToDashboardProvider"].then === "function"
+                ) {
+                  $steps["goToDashboardProvider"] = await $steps[
+                    "goToDashboardProvider"
+                  ];
+                }
+              };
               __composite["1"]["label"] = "Spr\u00e1va profilu";
+              __composite["1"]["onClick"] = async info => {
+                const $steps = {};
+
+                $steps["goToDashboardProvider"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: `/provozovatel/${"profile"}`
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToDashboardProvider"] != null &&
+                  typeof $steps["goToDashboardProvider"] === "object" &&
+                  typeof $steps["goToDashboardProvider"].then === "function"
+                ) {
+                  $steps["goToDashboardProvider"] = await $steps[
+                    "goToDashboardProvider"
+                  ];
+                }
+              };
               __composite["2"]["label"] = "Nastaven\u00ed plateb";
-              __composite["3"]["type"] = "divider";
-              __composite["4"]["label"] = "Odhl\u00e1sit";
-              __composite["4"]["onClick"] = async info => {
+              __composite["2"]["onClick"] = async info => {
+                const $steps = {};
+
+                $steps["goToDashboardProvider"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: `/provozovatel/${"payment"}`
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToDashboardProvider"] != null &&
+                  typeof $steps["goToDashboardProvider"] === "object" &&
+                  typeof $steps["goToDashboardProvider"].then === "function"
+                ) {
+                  $steps["goToDashboardProvider"] = await $steps[
+                    "goToDashboardProvider"
+                  ];
+                }
+              };
+              __composite["3"]["type"] = "item";
+              __composite["3"]["label"] = "Nastaven\u00ed \u00fa\u010dtu";
+              __composite["3"]["onClick"] = async info => {
+                const $steps = {};
+
+                $steps["goToDashboardProvider"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: `/provozovatel/${"account"}`
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToDashboardProvider"] != null &&
+                  typeof $steps["goToDashboardProvider"] === "object" &&
+                  typeof $steps["goToDashboardProvider"].then === "function"
+                ) {
+                  $steps["goToDashboardProvider"] = await $steps[
+                    "goToDashboardProvider"
+                  ];
+                }
+              };
+              __composite["4"]["type"] = "divider";
+              __composite["5"]["label"] = "Odhl\u00e1sit";
+              __composite["5"]["onClick"] = async info => {
                 const $steps = {};
 
                 $steps["runActionOnLogout"] = true
                   ? (() => {
-                      const actionArgs = {};
+                      const actionArgs = {
+                        tplRef: "logout",
+                        action: "triggerLogout"
+                      };
                       return (({ tplRef, action, args }) => {
                         return $refs?.[tplRef]?.[action]?.(...(args ?? []));
                       })?.apply(null, [actionArgs]);
@@ -347,18 +625,45 @@ function PlasmicHeader__RenderFunc(props: {
                     "runActionOnLogout"
                   ];
                 }
+
+                $steps["goToHomepage"] = true
+                  ? (() => {
+                      const actionArgs = { destination: `/` };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToHomepage"] != null &&
+                  typeof $steps["goToHomepage"] === "object" &&
+                  typeof $steps["goToHomepage"].then === "function"
+                ) {
+                  $steps["goToHomepage"] = await $steps["goToHomepage"];
+                }
               };
               return __composite;
             })()}
             trigger={(() => {
               try {
-                return $ctx.isLogged ? "hover" : false;
+                return $ctx.userData && $ctx.userData.isLogged
+                  ? "hover"
+                  : false;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return undefined;
+                  return "hover";
                 }
                 throw e;
               }
@@ -368,11 +673,12 @@ function PlasmicHeader__RenderFunc(props: {
               data-plasmic-name={"button"}
               data-plasmic-override={overrides.button}
               className={classNames("__wab_instance", sty.button)}
+              disabled={undefined}
               onClick={async () => {
                 const $steps = {};
 
                 $steps["goToLogin"] =
-                  $ctx.isLogged === false
+                  !$ctx.userData || !$ctx.userData.isLogged
                     ? (() => {
                         const actionArgs = { destination: `/login` };
                         return (({ destination }) => {
@@ -406,14 +712,36 @@ function PlasmicHeader__RenderFunc(props: {
                 )}
               >
                 <React.Fragment>
-                  {$ctx.isLogged ? "Můj účet" : "Přihlásit se"}
+                  {(() => {
+                    try {
+                      return $ctx.visitorData.isLogged === true
+                        ? "Můj účet"
+                        : "Přihlásit se";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "P\u0159ihl\u00e1sit";
+                      }
+                      throw e;
+                    }
+                  })()}
                 </React.Fragment>
               </div>
             </AntdButton>
           </AntdDropdown>
         </div>
       </div>
-    </section>
+      <Logout
+        data-plasmic-name={"logout"}
+        data-plasmic-override={overrides.logout}
+        className={classNames("__wab_instance", sty.logout)}
+        ref={ref => {
+          $refs["logout"] = ref;
+        }}
+      />
+    </header>
   ) as React.ReactElement | null;
 }
 
@@ -426,8 +754,10 @@ const PlasmicDescendants = {
     "web3",
     "web4",
     "web5",
+    "h6",
     "dropdown",
-    "button"
+    "button",
+    "logout"
   ],
   framepost: ["framepost"],
   web: ["web"],
@@ -435,22 +765,26 @@ const PlasmicDescendants = {
   web3: ["web3"],
   web4: ["web4"],
   web5: ["web5"],
+  h6: ["h6"],
   dropdown: ["dropdown", "button"],
-  button: ["button"]
+  button: ["button"],
+  logout: ["logout"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  header: "section";
+  header: "header";
   framepost: "div";
   web: "h2";
   web2: "h2";
   web3: "h2";
   web4: "h2";
   web5: "h2";
+  h6: "h6";
   dropdown: typeof AntdDropdown;
   button: typeof AntdButton;
+  logout: typeof Logout;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -519,8 +853,10 @@ export const PlasmicHeader = Object.assign(
     web3: makeNodeComponent("web3"),
     web4: makeNodeComponent("web4"),
     web5: makeNodeComponent("web5"),
+    h6: makeNodeComponent("h6"),
     dropdown: makeNodeComponent("dropdown"),
     button: makeNodeComponent("button"),
+    logout: makeNodeComponent("logout"),
 
     // Metadata about props expected for PlasmicHeader
     internalVariantProps: PlasmicHeader__VariantProps,

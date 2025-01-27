@@ -7,18 +7,31 @@
 import * as React from "react";
 import { hasVariant, ensureGlobalVariants } from "@plasmicapp/react-web";
 import { AntdConfigProvider } from "@plasmicpkgs/antd5/skinny/registerConfigProvider";
+import { CmsCredentialsProvider } from "@plasmicpkgs/plasmic-cms";
+import { AuthGlobalContext } from "@components/AuthGlobalContext"; // plasmic-import: 5_Kosv-PYBtH/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   antdConfigProviderProps?: Partial<
     Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
   >;
+  cmsCredentialsProviderProps?: Partial<
+    Omit<React.ComponentProps<typeof CmsCredentialsProvider>, "children">
+  >;
+  authGlobalContextProps?: Partial<
+    Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
+  >;
 }
 
 export default function GlobalContextsProvider(
   props: GlobalContextsProviderProps
 ) {
-  const { children, antdConfigProviderProps } = props;
+  const {
+    children,
+    antdConfigProviderProps,
+    cmsCredentialsProviderProps,
+    authGlobalContextProps
+  } = props;
 
   return (
     <AntdConfigProvider
@@ -113,7 +126,35 @@ export default function GlobalContextsProvider(
           : false
       }
     >
-      {children}
+      <CmsCredentialsProvider
+        {...cmsCredentialsProviderProps}
+        databaseId={
+          cmsCredentialsProviderProps &&
+          "databaseId" in cmsCredentialsProviderProps
+            ? cmsCredentialsProviderProps.databaseId!
+            : "6itR7eZxwZxbhcFtqpyabC"
+        }
+        databaseToken={
+          cmsCredentialsProviderProps &&
+          "databaseToken" in cmsCredentialsProviderProps
+            ? cmsCredentialsProviderProps.databaseToken!
+            : "q4phalMBoayQqE0imehutsW1bQ8YVjcPMlYh61d5HyIsaBpHIhvgDukVxl9Fb5OMhlspkRRaiyxM1UUr7w"
+        }
+        host={
+          cmsCredentialsProviderProps && "host" in cmsCredentialsProviderProps
+            ? cmsCredentialsProviderProps.host!
+            : "https://data.plasmic.app"
+        }
+        locale={
+          cmsCredentialsProviderProps && "locale" in cmsCredentialsProviderProps
+            ? cmsCredentialsProviderProps.locale!
+            : "Default"
+        }
+      >
+        <AuthGlobalContext {...authGlobalContextProps}>
+          {children}
+        </AuthGlobalContext>
+      </CmsCredentialsProvider>
     </AntdConfigProvider>
   );
 }
